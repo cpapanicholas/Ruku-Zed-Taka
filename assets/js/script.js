@@ -94,4 +94,4 @@ document.addEventListener("DOMContentLoaded", () => {
                     forecastList.innerHTML = "Forecast data not found.";
                 });
         }
-    
+})
