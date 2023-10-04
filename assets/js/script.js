@@ -39,10 +39,9 @@ document.addEventListener("DOMContentLoaded", () => {
         weatherInfo.appendChild(cityCard);
     }
 
-    
     function displayForecast(data) {
-        forecastList.innerHTML = "";
-
+        const forecastList = document.querySelector(".forecast");
+    
         data.list.forEach(item => {
             const {
                 dt,
@@ -50,13 +49,22 @@ document.addEventListener("DOMContentLoaded", () => {
                 main: { temp, humidity },
                 wind: { speed }
             } = item;
-
-            const date = new Date(dt * 1000); 
+    
+            const date = new Date(dt * 1000); // Convert timestamp to date
             const dateStr = date.toLocaleDateString();
-            const iconUrl = `http://openweathermap.org/img/wn/${icon}.png`; 
-            const temperature = Math.round((temp - 273.15) * 9/5 + 32); 
-
-            
+            const iconUrl = `http://openweathermap.org/img/wn/${icon}.png`; // Weather icon URL
+            const temperature = Math.round((temp - 273.15) * 9/5 + 32); // Convert to Fahrenheit
+    
+            // Create HTML for forecast card
+            const forecastCardHTML = `
+                <div class="forecast-card">
+                    <p>Date: ${dateStr}</p>
+                    <img src="${iconUrl}" alt="Forecast">
+                    <p>Temperature: ${temperature}°F</p>
+                    <p>Humidity: ${humidity}%</p>
+                    <p>Wind Speed: ${speed} m/s</p>
+                </div>
+            `;
             const forecastCard = document.createElement("div");
             forecastCard.classList.add("forecast-card");
             forecastCard.innerHTML = `
@@ -66,8 +74,9 @@ document.addEventListener("DOMContentLoaded", () => {
                 <p>Humidity: ${humidity}%</p>
                 <p>Wind Speed: ${speed} m/s</p>
             `;
-
-            forecastList.appendChild(forecastCard);
+    
+            // Append forecast card to the .forecast section
+            forecastList.innerHTML += forecastCardHTML;
         });
     }
 

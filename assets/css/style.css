@@ -48,4 +48,25 @@ main {
     text-align: center;
 }
 
+.current-weather {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.forecast {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+}
+
+.forecast-card {
+    flex-basis: calc(20% - 20px); 
+    text-align: center;
+    background-color: #fff;
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+}
 
