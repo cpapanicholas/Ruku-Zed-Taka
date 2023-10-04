@@ -1,4 +1,4 @@
- RukuZedTakaAPI = dd00af83e89105441c591b1fdc8aa109
+//  RukuZedTakaAPI = dd00af83e89105441c591b1fdc8aa109
 
 document.addEventListener("DOMContentLoaded", () => {
     const RukuZedTakaAPI = "dd00af83e89105441c591b1fdc8aa109 "; 
@@ -19,9 +19,8 @@ document.addEventListener("DOMContentLoaded", () => {
         const date = new Date(data.dt * 1000);
         const dateStr = date.toLocaleDateString();
         const iconCode = data.weather[0].icon;
-        const iconUrl = `http://openweathermap.org/img/wn/${iconCode}.png`; // Weather icon URL
+        const iconUrl = `http://openweathermap.org/img/wn/${iconCode}.png`; 
 
-        // Create a card to display weather information for each city
         const cityCard = document.createElement("div");
         cityCard.classList.add("city-card");
         cityCard.innerHTML = `
@@ -35,3 +34,27 @@ document.addEventListener("DOMContentLoaded", () => {
 
         weatherInfo.appendChild(cityCard);
     }
+    searchButton.addEventListener("click", () => {
+        const cities = cityInput.value.trim().split(","); 
+        if (cities.length === 0) return;
+
+        weatherInfo.innerHTML = ""; 
+
+        cities.forEach(city => {
+            const trimmedCity = city.trim();
+            if (trimmedCity === "") return;
+
+            
+            fetch(`https://api.openweathermap.org/data/2.5/weather?q=${trimmedCity}&appid=${dd00af83e89105441c591b1fdc8aa109}`)
+                .then(response => response.json())
+                .then(data => {
+                    displayWeather(data);
+                    addToSearchHistory(trimmedCity);
+                })
+                .catch(error => {
+                    console.error(error);
+                    weatherInfo.innerHTML += `<p>Weather data for ${trimmedCity} not found.</p>`;
+                });
+        });
+    });
+});
