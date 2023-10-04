@@ -1,13 +1,14 @@
-//  RukuZedTakaAPI = dd00af83e89105441c591b1fdc8aa109
+
 
 document.addEventListener("DOMContentLoaded", () => {
-    const RukuZedTakaAPI = "dd00af83e89105441c591b1fdc8aa109 "; 
+    const apiKey = "5685455f352d66e329e089055ab2fa22"; 
+
 
     const searchButton = document.getElementById("search-button");
     const cityInput = document.getElementById("city-input");
-    const weatherInfo = document.querySelector(".weather-info");
+    const currentWeather = document.querySelector(".current-weather");
+    const forecast = document.querySelector(".forecast");
     const searchHistoryList = document.getElementById("search-history-list");
-    const forecastList = document.getElementById("forecast-list");
 
     
     function displayWeather(data) {
@@ -20,14 +21,12 @@ document.addEventListener("DOMContentLoaded", () => {
         } = data;
 
         const temperature = Math.round((temp - 273.15) * 9/5 + 32); 
-        const date = new Date(dt * 1000);
+        const date = new Date(dt * 1000); 
         const dateStr = date.toLocaleDateString();
         const iconUrl = `http://openweathermap.org/img/wn/${icon}.png`; 
 
         
-        const cityCard = document.createElement("div");
-        cityCard.classList.add("city-card");
-        cityCard.innerHTML = `
+        const currentWeatherHTML = `
             <h2>${city} - ${dateStr}</h2>
             <img src="${iconUrl}" alt="${description}">
             <p>Temperature: ${temperature}°F</p>
@@ -36,12 +35,14 @@ document.addEventListener("DOMContentLoaded", () => {
             <p>Wind Speed: ${speed} m/s</p>
         `;
 
-        weatherInfo.appendChild(cityCard);
+        
+        currentWeather.innerHTML = currentWeatherHTML;
     }
 
-    function displayForecast(data) {
-        const forecastList = document.querySelector(".forecast");
     
+    function displayForecast(data) {
+        forecast.innerHTML = ""; 
+
         data.list.forEach(item => {
             const {
                 dt,
@@ -49,13 +50,13 @@ document.addEventListener("DOMContentLoaded", () => {
                 main: { temp, humidity },
                 wind: { speed }
             } = item;
-    
-            const date = new Date(dt * 1000); // Convert timestamp to date
+
+            const date = new Date(dt * 1000); 
             const dateStr = date.toLocaleDateString();
-            const iconUrl = `http://openweathermap.org/img/wn/${icon}.png`; // Weather icon URL
-            const temperature = Math.round((temp - 273.15) * 9/5 + 32); // Convert to Fahrenheit
-    
-            // Create HTML for forecast card
+            const iconUrl = `http://openweathermap.org/img/wn/${icon}.png`; 
+            const temperature = Math.round((temp - 273.15) * 9/5 + 32); 
+
+            
             const forecastCardHTML = `
                 <div class="forecast-card">
                     <p>Date: ${dateStr}</p>
@@ -65,42 +66,89 @@ document.addEventListener("DOMContentLoaded", () => {
                     <p>Wind Speed: ${speed} m/s</p>
                 </div>
             `;
-            const forecastCard = document.createElement("div");
-            forecastCard.classList.add("forecast-card");
-            forecastCard.innerHTML = `
-                <p>Date: ${dateStr}</p>
-                <img src="${iconUrl}" alt="Forecast">
-                <p>Temperature: ${temperature}°F</p>
-                <p>Humidity: ${humidity}%</p>
-                <p>Wind Speed: ${speed} m/s</p>
-            `;
-    
-            // Append forecast card to the .forecast section
-            forecastList.innerHTML += forecastCardHTML;
+
+            
+            forecast.innerHTML += forecastCardHTML;
         });
     }
 
-        
-        function displayCityWeather(city) {
-            fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${dd00af83e89105441c591b1fdc8aa109}`)
-                .then(response => response.json())
-                .then(data => {
-                    displayWeather(data);
-                    addToSearchHistory(city);
-                })
-                .catch(error => {
-                    console.error(error);
-                    weatherInfo.innerHTML = "City not found.";
-                });
     
-            fetch(`https://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=${dd00af83e89105441c591b1fdc8aa109}`)
-                .then(response => response.json())
-                .then(data => {
-                    displayForecast(data);
-                })
-                .catch(error => {
-                    console.error(error);
-                    forecastList.innerHTML = "Forecast data not found.";
-                });
+    function displayCityWeather(city) {
+        fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${5685455f352d66e329e089055ab2fa22}`)
+            .then(response => response.json())
+            .then(data => {
+                displayWeather(data);
+                addToSearchHistory(city);
+            })
+            .catch(error => {
+                console.error(error);
+                currentWeather.innerHTML = "City not found.";
+            });
+
+        fetch(`https://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=${5685455f352d66e329e089055ab2fa22}`)
+            .then(response => response.json())
+            .then(data => {
+                displayForecast(data);
+            })
+            .catch(error => {
+                console.error(error);
+                forecast.innerHTML = "Forecast data not found.";
+            });
+    }
+
+    
+    function addToSearchHistory(city) {
+        
+        const previousCities = getPreviousCities();
+        previousCities.unshift(city); 
+        savePreviousCities(previousCities);
+
+        
+        displaySearchHistory();
+    }
+
+   
+    function getPreviousCities() {
+        const previousCitiesJSON = localStorage.getItem("previousCities");
+        return JSON.parse(previousCitiesJSON) || [];
+    }
+
+    
+    function savePreviousCities(previousCities) {
+        const previousCitiesJSON = JSON.stringify(previousCities);
+        localStorage.setItem("previousCities", previousCitiesJSON);
+    }
+
+  
+    function displaySearchHistory() {
+        const previousCities = getPreviousCities();
+        searchHistoryList.innerHTML = "";
+
+        previousCities.forEach(city => {
+            const listItem = document.createElement("li");
+            listItem.textContent = city;
+            searchHistoryList.appendChild(listItem);
+        });
+    }
+
+    
+    searchButton.addEventListener("click", () => {
+        const city = cityInput.value.trim();
+        if (city === "") return;
+
+        
+        displayCityWeather(city);
+    });
+
+   
+    searchHistoryList.addEventListener("click", event => {
+        if (event.target.tagName === "LI") {
+            const selectedCity = event.target.textContent;
+            cityInput.value = selectedCity;
+            displayCityWeather(selectedCity);
         }
-})
+    });
+
+  
+    displaySearchHistory();
+});
