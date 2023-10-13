@@ -31,7 +31,7 @@ document.addEventListener("DOMContentLoaded", () => {
             <img src="${iconUrl}" alt="${description}">
             <p>Temperature: ${temperature}°F</p>
             <p>Description: ${description}</p>
-            <p>Humidity: ${humidity}%</p>
+            <p>Humidity: ${humidity}%</p> 
             <p>Wind Speed: ${speed} m/s</p>
         `;
 
@@ -74,7 +74,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     
     function displayCityWeather(city) {
-        fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${5685455f352d66e329e089055ab2fa22}`)
+        fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}`)
             .then(response => response.json())
             .then(data => {
                 displayWeather(data);
@@ -85,7 +85,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 currentWeather.innerHTML = "City not found.";
             });
 
-        fetch(`https://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=${5685455f352d66e329e089055ab2fa22}`)
+        fetch(`https://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=${apiKey}`)
             .then(response => response.json())
             .then(data => {
                 displayForecast(data);
@@ -94,7 +94,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 console.error(error);
                 forecast.innerHTML = "Forecast data not found.";
             });
-    }
+    } 
 
     
     function addToSearchHistory(city) {
