@@ -17,6 +17,6 @@ THEN I am presented with a 5-day forecast that displays the date, an icon repres
 WHEN I click on a city in the search history
 THEN I am again presented with current and future conditions for that city
 
-LINK:
+LINK: https://cpapanicholas.github.io/Ruku-Zed-Taka/
 
-SS:
+SS: ![image](https://github.com/cpapanicholas/Ruku-Zed-Taka/assets/144556211/b1cd74a1-f88d-4efe-a5e0-4a70d7bba669)
